@@ -7,11 +7,15 @@ if __name__ == "__main__":
     This is for solve the problem that a resource will store in different assetbundle files
     instead of all in one single assetbundle, so we need to find them in
     AssetStudio's export list xml file.
+    
+    V2 add child_container_search_content
     '''
 
     xml_path = r"C:\Users\Administrator\Desktop\assets.xml"
     new_xml_path = r"C:\Users\Administrator\Desktop\assets_new2.xml"
-    container_search_content = "ch_f_hanhaimomin"
+
+    container_search_content = "actor_visual_part"
+    child_container_search_content = "actor_visual_part"
 
     unique_source_set = set()
     unique_container_set = set()
@@ -36,17 +40,22 @@ if __name__ == "__main__":
         size = asset['Size']
 
         if container.find(container_search_content) != -1:
-            actor_assets.append(asset)
 
-            # 打印解析结果
-            print("Container:", container)
-            print("Type ID:", type_id)
-            print("Path ID:", path_id)
-            print("Source:", source)
-            print("Size:", size)
-            print("")
-            unique_container_set.add(container.split("/")[-2])
-            unique_source_set.add(source.split("\\")[-3] + "_" + source.split("\\")[-2])
+            child_container = container.split("/")[-2]
+
+            if child_container.find(child_container_search_content) != -1:
+                actor_assets.append(asset)
+
+                # 打印解析结果
+                print("Container:", container)
+                print("Type ID:", type_id)
+                print("Path ID:", path_id)
+                print("Source:", source)
+                print("Size:", size)
+                print("")
+
+                unique_container_set.add(child_container)
+                unique_source_set.add(source.split("\\")[-3] + "_" + source.split("\\")[-2])
 
     # 将包含"actor_visual_part"的节点转换为XML数据
     actor_assets_dict = {'Assets': {'Asset': actor_assets}}
